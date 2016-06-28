@@ -67,13 +67,13 @@ LDAvis::serVis(LDAvis.json)
 ## save data for Shiny app
 
 # ldavis json
-save(LDAvis.json, file='/home/chris/sussex/NAM16_hackday/ldavis.RData')
+save(LDAvis.json, file=paste0(dir,'/sussex/NAM16_hackday/ldavis.RData'))
 
 # small data frame of interesting features
 
-# ....
+output_data <- data.frame(dat[,c("id","submitted","updated","title","link_abstract","primary_category")],theta)
 
-
+save(output_data, file=paste0(dir,'/sussex/NAM16_hackday/topics.RData'))
 
 ## what categories does a topic represent?
 
@@ -84,11 +84,5 @@ top_topics <- lapply(astro_cats,FUN = function(x){
 
 # find the top topic for each category
 data.frame(astro_cats,unlist(lapply(top_topics,which.max)))
-
-
-
-
-
-
 
 

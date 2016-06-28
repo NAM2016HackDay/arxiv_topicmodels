@@ -11,9 +11,7 @@ server <- function(input, output) {
 
 ui <- fluidPage(
   headerPanel("Topic Modelling astro-ph"),
-  
-  
-  
+
   tabsetPanel(
     tabPanel("Introduction",
              br(),
