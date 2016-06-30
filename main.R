@@ -4,14 +4,18 @@ library("aRxiv")
 library("tm")
 library("topicmodels")
 
-
-query <- 'cat:astro-ph* AND submittedDate:[201512 TO 201606]'
-arxiv_count(query)
-
 dir <- getwd()
 
-#z <- arxiv_search(query,limit = 20000)
-#save(z,file = paste0(dir,'/sussex/arxiv_topicmodels/2016_arxiv.RData')
+
+query <- 'cat:astro-ph* AND submittedDate:[20160401 TO 20160430]'
+#arxiv_count(query)
+
+
+#z <- arxiv_search(query,force=T,limit=20000)
+
+z <- z.append(y)
+
+#save(z,file = paste0(dir,'/sussex/arxiv_topicmodels/2016_arxiv.RData'))
 
 load(dir+'/sussex/arxiv_topicmodels/2016_arxiv.RData')
 
@@ -60,6 +64,10 @@ LDAvis.json <- LDAvis::createJSON(phi = phi,
                                   vocab = vocab,
                                   term.frequency = term.frequency)
 
+library(RJSONIO)
+
+topic_order <- RJSONIO::fromJSON(LDAvis.json)$topic.order
+
 LDAvis::serVis(LDAvis.json)
 
 
@@ -67,13 +75,14 @@ LDAvis::serVis(LDAvis.json)
 ## save data for Shiny app
 
 # ldavis json
-save(LDAvis.json, file=paste0(dir,'/sussex/NAM16_hackday/ldavis.RData'))
+save(LDAvis.json, file=paste0(dir,'/sussex/arxiv_topicmodels/ldavis.RData'))
 
 # small data frame of interesting features
+theta_sorted <- data.frame(theta[,topic_order])
+colnames(theta_sorted) <- paste("topic",1:15)
+output_data <- data.frame(dat[,c("id","submitted","updated","title","link_abstract","primary_category")],theta_sorted)
 
-output_data <- data.frame(dat[,c("id","submitted","updated","title","link_abstract","primary_category")],theta)
-
-save(output_data, file=paste0(dir,'/sussex/NAM16_hackday/topics.RData'))
+save(output_data, file=paste0(dir,'/sussex/arxiv_topicmodels/topics.RData'))
 
 ## what categories does a topic represent?
 
